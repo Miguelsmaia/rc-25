@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import requests
 import json
-import plotly.express as px
-
 
 st.title("WRC Dashboard")
 
