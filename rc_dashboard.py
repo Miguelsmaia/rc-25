@@ -3,6 +3,21 @@ import pandas as pd
 import requests
 import json
 
+
+##### GENERAL FUNCTIONS
+@st.cache_data
+def create_df(url):
+    response = requests.get(url)
+    try:
+        json_data = json.loads(response.text)
+        return pd.DataFrame(json_data['values'], columns=json_data['fields'])
+    except Exception as e:
+        print("Error: ",e)
+
+
+
+
+
 st.title("WRC Dashboard")
 
 ## CALENDAR
@@ -44,6 +59,26 @@ rally_name = st.selectbox(
 rally = rally_dict[rally_name][1]
 event = rally_dict[rally_name][0]
 
-## STAGES Winners
+## STAGES
+
+def get_stages(url):
+    df = pd.DataFrame(json.loads(requests.get(url_stages).text))
+    return {code: [stage_id, name, status] for code, stage_id, name, status in zip(df["code"], df["stageId"], df["name"], df["status"])}
+
+url_stages = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/stages.json'
+
+
+stage_dict = get_stages(url_stages)
+
+rally_stage = st.selectbox(
+    "Select Stage:",
+    (stage_dict.keys()),
+)
+
+stage_id = stage_dict[rally_stage][0]
+
+
+
+## SPLIT TIMES
 
 
