@@ -4,8 +4,6 @@ import requests
 import json
 import plotly.express as px
 
-st.cache_data.clear()
-
 ##### GENERAL FUNCTIONS
 @st.cache_data
 def create_df(url):
