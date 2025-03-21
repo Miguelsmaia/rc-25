@@ -110,13 +110,15 @@ def get_times(url_stage, url_overall):
     # Cleaning stage table
     # Transforming ms to seconds
     df_stage[["diffFirst", "diffPrev"]] = df_stage[["diffFirstMs", "diffPrevMs"]] / 1000
+    # Cleaning elapsed duration
+    df_stage["elapsedDuration"] = df_stage["elapsedDuration"].apply(lambda x: x[3:11])
     # Creating columns with the stage (SS*)
     df_stage["stage"] = stage
     # Joining column with the name of the driver
     df_stage = df_stage.merge(drivers_clean, on="entryId", how="left")
     df_stage = df_stage.merge(df_overall[["entryId", "diffFirstOverall"]], on="entryId", how="left")
     # Creating a new df with only necessary columns
-    df_stage_clean = df_stage[["driver", "diffFirst", "diffPrev", "stage", "diffFirstOverall"]]
+    df_stage_clean = df_stage[["driver", "elapsedDuration", "diffFirst", "diffPrev", "stage", "diffFirstOverall"]]
 
     return df_stage_clean, df_overall_clean
 
@@ -142,10 +144,10 @@ tab1, tab2 = st.tabs(["Stage time", "Overall"])
 
 with tab1:
     st.header("Stage time")
-    st.dataframe(all_stages[all_stages["stage"] == rally_stage])
+    st.dataframe(all_stages.drop(columns="stage")[all_stages["stage"] == rally_stage])
 with tab2:
     st.header("Overall")
-    st.dataframe(all_overall[all_overall["stage"] == rally_stage])
+    st.dataframe(all_overall.drop(columns="stage")[all_overall["stage"] == rally_stage])
 
 
 st.header("Charts")
