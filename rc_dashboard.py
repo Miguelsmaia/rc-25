@@ -111,7 +111,7 @@ def get_times(url_stage, url_overall):
     # Transforming ms to seconds
     df_stage[["diffFirst", "diffPrev"]] = df_stage[["diffFirstMs", "diffPrevMs"]] / 1000
     # Cleaning elapsed duration
-    df_stage["elapsedDuration"] = df_stage["elapsedDuration"].apply(lambda x: x[3:11])
+    df_stage["elapsedDuration"] = df_stage["elapsedDuration"].fillna("00:00:00").apply(lambda x: x[3:11])
     # Creating columns with the stage (SS*)
     df_stage["stage"] = stage
     # Joining column with the name of the driver
