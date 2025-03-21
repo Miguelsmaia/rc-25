@@ -4,6 +4,7 @@ import requests
 import json
 import plotly.express as px
 
+st.cache_data.clear()
 
 ##### GENERAL FUNCTIONS
 @st.cache_data
@@ -122,7 +123,6 @@ def get_times(url_stage, url_overall):
     return df_stage_clean, df_overall_clean
 
 if st.button("Get times", type="primary"):
-    st.cache_data.clear()
     stage_dict = get_stages(url_stages)
 
     all_stages = pd.DataFrame()
