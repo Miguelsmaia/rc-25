@@ -123,7 +123,7 @@ def get_times(url_stage, url_overall):
 all_stages = pd.DataFrame()
 all_overall = pd.DataFrame()
 for stage, (stage_id, name, status) in stage_dict.items():
-    if status != "ToRun":
+    if status == "Completed":
         url_stage = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/stages/{stage_id}/stagetimes.json?rallyId={rally}&championshipId=287&priority=P1'
         url_overall = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/stages/{stage_id}/results.json?rallyId={rally}&championshipId=287&priority=P1'
         
