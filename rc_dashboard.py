@@ -120,7 +120,7 @@ def get_times(url_stage, url_overall):
 
     return df_stage_clean, df_overall_clean
 
-if st.button("Refresh data"):
+if st.button("Refresh data", type="primary"):
     st.cache_data.clear()
 
 all_stages = pd.DataFrame()
@@ -150,8 +150,12 @@ with tab2:
 
 st.header("Charts")
 
-# Create the line chart with Plotly Express
-fig = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver")
+with tab1:
+    st.header("Stage chart")
+    fig = px.line(all_stages, x="stage", y="diffFirst", color="driver")
 
-# Display the Plotly chart in Streamlit
-st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+with tab2:
+    fig2 = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver")
+
+    st.plotly_chart(fig2, theme="streamlit", use_container_width=True)
