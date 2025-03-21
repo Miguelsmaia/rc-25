@@ -150,12 +150,14 @@ with tab2:
 
 st.header("Charts")
 
-with tab1:
+tab3, tab4 = st.tabs(["Stage time", "Overall"])
+
+with tab3:
     st.header("Stage chart")
     fig = px.line(all_stages, x="stage", y="diffFirst", color="driver")
 
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-with tab2:
+with tab4:
     fig2 = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver")
 
     st.plotly_chart(fig2, theme="streamlit", use_container_width=True)
