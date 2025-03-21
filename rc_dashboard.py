@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import json
+import plotly.express as px
 
 
 ##### GENERAL FUNCTIONS
@@ -146,3 +147,11 @@ with tab2:
     st.dataframe(all_overall[all_overall["stage"] == rally_stage])
 
 
+
+st.header("Charts")
+
+# Create the line chart with Plotly Express
+fig = px.line(all_overall, x="stage", y="diffFirst", color="driver")
+
+# Display the Plotly chart in Streamlit
+st.plotly_chart(fig, theme="streamlit", use_container_width=True)
