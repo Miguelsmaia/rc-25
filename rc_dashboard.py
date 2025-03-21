@@ -122,38 +122,38 @@ def get_times(url_stage, url_overall):
 
     return df_stage_clean, df_overall_clean
 
-if st.button("Get times", type="primary"):
-    stage_dict = get_stages(url_stages)
 
-    all_stages = pd.DataFrame()
-    all_overall = pd.DataFrame()
-    for stage, (stage_id, name, status) in stage_dict.items():
-        if status != "ToRun":
-            url_stage = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/stages/{stage_id}/stagetimes.json?rallyId={rally}&championshipId=287&priority=P1'
-            url_overall = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/stages/{stage_id}/results.json?rallyId={rally}&championshipId=287&priority=P1'
+stage_dict = get_stages(url_stages)
+
+all_stages = pd.DataFrame()
+all_overall = pd.DataFrame()
+for stage, (stage_id, name, status) in stage_dict.items():
+    if status != "ToRun":
+        url_stage = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/stages/{stage_id}/stagetimes.json?rallyId={rally}&championshipId=287&priority=P1'
+        url_overall = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/stages/{stage_id}/results.json?rallyId={rally}&championshipId=287&priority=P1'
             
-            df_stage_clean, df_overall_clean = get_times(url_stage, url_overall)
+        df_stage_clean, df_overall_clean = get_times(url_stage, url_overall)
         
-        else:
-            continue
+    else:
+        continue
 
-        all_stages = pd.concat((all_stages, df_stage_clean))
-        all_overall = pd.concat((all_overall, df_overall_clean))
+    all_stages = pd.concat((all_stages, df_stage_clean))
+    all_overall = pd.concat((all_overall, df_overall_clean))
 
-    tab1, tab2 = st.tabs(["Stage time", "Overall"])
+tab1, tab2 = st.tabs(["Stage time", "Overall"])
 
-    with tab1:
-        st.header("Stage time")
-        st.dataframe(all_stages[all_stages["stage"] == rally_stage])
-    with tab2:
-        st.header("Overall")
-        st.dataframe(all_overall[all_overall["stage"] == rally_stage])
+with tab1:
+    st.header("Stage time")
+    st.dataframe(all_stages[all_stages["stage"] == rally_stage])
+with tab2:
+    st.header("Overall")
+    st.dataframe(all_overall[all_overall["stage"] == rally_stage])
 
 
-    st.header("Charts")
+st.header("Charts")
 
-    # Create the line chart with Plotly Express
-    fig = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver")
+# Create the line chart with Plotly Express
+fig = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver")
 
-    # Display the Plotly chart in Streamlit
-    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+# Display the Plotly chart in Streamlit
+st.plotly_chart(fig, theme="streamlit", use_container_width=True)
