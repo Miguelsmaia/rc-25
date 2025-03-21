@@ -150,7 +150,7 @@ with tab2:
 st.header("Charts")
 
 # Create the line chart with Plotly Express
-fig = px.line(all_overall, x="stage", y="diffFirst", color="driver")
+fig = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver")
 
 # Display the Plotly chart in Streamlit
 st.plotly_chart(fig, theme="streamlit", use_container_width=True)
