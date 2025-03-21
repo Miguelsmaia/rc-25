@@ -147,7 +147,6 @@ with tab2:
     st.dataframe(all_overall[all_overall["stage"] == rally_stage])
 
 
-pip install plotly
 st.header("Charts")
 
 # Create the line chart with Plotly Express
