@@ -120,8 +120,8 @@ def get_times(url_stage, url_overall):
 
     return df_stage_clean, df_overall_clean
 
-
-stage_dict = get_stages(url_stages)
+if st.button("Refresh data"):
+    st.cache_data.clear()
 
 all_stages = pd.DataFrame()
 all_overall = pd.DataFrame()
