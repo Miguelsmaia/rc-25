@@ -60,7 +60,7 @@ rally = rally_dict[rally_name][1]
 event = rally_dict[rally_name][0]
 
 ## STAGES
-
+@st.cache_data
 def get_stages(url):
     df = pd.DataFrame(json.loads(requests.get(url).text))
     return {code: [stage_id, name, status] for code, stage_id, name, status in zip(df["code"], df["stageId"], df["name"], df["status"])}
@@ -80,7 +80,7 @@ stage_id = stage_dict[rally_stage][0]
 ## GET DRIVERS INFO
 
 drivers = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events/{event}/rallies/{rally}/entries.json'
-
+@st.cache_data
 def get_drivers(url):
     df = pd.DataFrame(json.loads(requests.get(url).text))
     df_clean = df.loc[df["groupId"] == 152, ["driver", "entryId"]]
@@ -90,7 +90,7 @@ def get_drivers(url):
 driver_dict, drivers_clean = get_drivers(drivers)
 
 ## STAGE AND OVERALL TIMES
-
+@st.cache_data
 def get_times(url_stage, url_overall):
     df_stage = pd.DataFrame(json.loads(requests.get(url_stage).text))
     df_overall = pd.DataFrame(json.loads(requests.get(url_overall).text))
@@ -132,4 +132,14 @@ for stage, (stage_id, name, status) in stage_dict.items():
     all_stages = pd.concat((all_stages, df_stage_clean))
     all_overall = pd.concat((all_overall, df_overall_clean))
 
-st.dataframe(all_stages[all_stages["stage"] == rally_stage])
+
+tab1, tab2 = st.tabs(["Stage time", "Overall"])
+
+with tab1:
+    st.header("Stage time")
+    st.dataframe(all_stages[all_stages["stage"] == rally_stage])
+with tab2:
+    st.header("Overall")
+    st.dataframe(all_overall[all_overall["stage"] == rally_stage])
+
+
