@@ -122,6 +122,7 @@ def get_times(url_stage, url_overall):
     return df_stage_clean, df_overall_clean
 
 if st.button("Get times", type="primary"):
+    st.cache_data.clear()
     stage_dict = get_stages(url_stages)
 
     all_stages = pd.DataFrame()
