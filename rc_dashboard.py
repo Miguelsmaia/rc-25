@@ -18,9 +18,10 @@ def create_df(url):
 
 
 
-st.title("WRC Dashboard")
+#st.title("WRC Dashboard")
 
 ## CALENDAR
+
 
 
 year = 2025
@@ -40,7 +41,7 @@ def calendar(url):
        'uid', 'seriesUid', 'releaseYear', 'availableOn', 'availableTill', 'championship', 'finishDate',
        'championshipLogo', 'endDateLocal'])
         df["startDateLocal"] = df["startDateLocal"].apply(lambda x: x[:10])
-        print("teste")    
+        print(df)
         return df, rally_list
     
     except Exception as e:
@@ -48,16 +49,18 @@ def calendar(url):
 
 
 
-calendar_df, rally_dict = calendar(url_calendar)
+#calendar_df, rally_dict = calendar(url_calendar)
 
 
-rally_name = st.selectbox(
-    "Select Rally:",
-    (rally_dict.keys()),
-)
+#rally_name = st.selectbox(
+#    "Select Rally:",
+#    (rally_dict.keys()),
+#)
 
-rally = rally_dict[rally_name][1]
-event = rally_dict[rally_name][0]
+st.title("Rally de Portugal")
+
+rally = 588 #rally_dict[rally_name][1]
+event = 540 #rally_dict[rally_name][0]
 
 ## STAGES
 @st.cache_data
