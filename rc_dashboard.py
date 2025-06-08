@@ -57,10 +57,10 @@ def calendar(url):
 #    (rally_dict.keys()),
 #)
 
-st.title("Rally de Portugal")
+st.title("Rally de Itália")
 
-rally = 588 #rally_dict[rally_name][1]
-event = 540 #rally_dict[rally_name][0]
+rally = 590 #rally_dict[rally_name][1]
+event = 542 #rally_dict[rally_name][0]
 
 ## STAGES
 @st.cache_data
