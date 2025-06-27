@@ -57,10 +57,10 @@ def calendar(url):
 #    (rally_dict.keys()),
 #)
 
-st.title("Rally de Itália")
+st.title("Rally da Grécia")
 
-rally = 590 #rally_dict[rally_name][1]
-event = 542 #rally_dict[rally_name][0]
+rally = 592 #rally_dict[rally_name][1]
+event = 544 #rally_dict[rally_name][0]
 
 ## STAGES
 @st.cache_data
@@ -73,12 +73,6 @@ url_stages = f'https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/events
 
 stage_dict = get_stages(url_stages)
 
-rally_stage = st.selectbox(
-    "Select Stage:",
-    (stage_dict.keys()),
-)
-
-stage_id = stage_dict[rally_stage][0]
 
 ## GET DRIVERS INFO
 
@@ -143,6 +137,39 @@ for stage, (stage_id, name, status) in stage_dict.items():
     all_stages = pd.concat((all_stages, df_stage_clean))
     all_overall = pd.concat((all_overall, df_overall_clean))
 
+
+### GRÁFICOS
+
+
+tab3, tab4 = st.tabs(["Overall chart", "Stage chart"])
+
+with tab3:
+    fig = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver", markers=True)
+
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+    
+with tab4:
+    fig2 = px.line(all_stages, x="stage", y="diffFirst", color="driver", markers=True)
+
+    st.plotly_chart(fig2, theme="streamlit", use_container_width=True)
+
+
+
+
+### TABELAS 
+
+# Select box -> Selects between the available stages (from the stage dict created above on Stages section)
+rally_stage = st.selectbox(
+    "Select Stage:",
+    (stage_dict.keys()),
+)
+
+# Creates a variable with the stage id of the selected stage
+stage_id = stage_dict[rally_stage][0]
+
+
+# Shows the table of the selected stage
+
 tab1, tab2 = st.tabs(["Stage time", "Overall"])
 
 with tab1:
@@ -152,17 +179,3 @@ with tab2:
     st.header("Overall")
     st.dataframe(all_overall.drop(columns="stage")[all_overall["stage"] == rally_stage])
 
-
-st.header("Charts")
-
-tab3, tab4 = st.tabs(["Stage time", "Overall"])
-
-with tab3:
-    st.header("Stage chart")
-    fig = px.line(all_stages, x="stage", y="diffFirst", color="driver", markers=True)
-
-    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-with tab4:
-    fig2 = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver", markers=True)
-
-    st.plotly_chart(fig2, theme="streamlit", use_container_width=True)
