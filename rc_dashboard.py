@@ -16,11 +16,14 @@ def create_df(url):
 
 
 
-wrc_dict = {"Monte Carlo": [703, 635]}
+wrc_dict = {"Monte Carlo": [703, 635],
+            "Sweden": [704, 636],
+            "Kenya": [705, 637],
+            }
 
 #st.write("MC: 703, 635")
 
-options = ["Monte Carlo"]
+options = ["Monte Carlo", "Sweden", "Kenya"]
 selection = st.pills("Rallies", options, selection_mode="single")
 
 
