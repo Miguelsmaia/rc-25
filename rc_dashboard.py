@@ -32,7 +32,7 @@ title = selection
 # title = st.text_input("Insert rally name (if needed)")
 
 
-if rally and event:
+if selection:
 
     st.title(title)
 
