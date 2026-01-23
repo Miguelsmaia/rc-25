@@ -23,16 +23,16 @@ st.write("MC: 703, 635")
 options = ["Monte Carlo"]
 selection = st.pills("Rallies", options, selection_mode="single")
 
-rally = wrc_dict[selection][0]
-event = wrc_dict[selection][1]
-title = selection
+
+if selection:
+
+    rally = wrc_dict[selection][0]
+    event = wrc_dict[selection][1]
+    title = selection
 
 # rally = st.text_input("Insert rally code") #rally_dict[rally_name][1]
 # event =  st.text_input("Insert event code") #rally_dict[rally_name][0]
 # title = st.text_input("Insert rally name (if needed)")
-
-
-if selection:
 
     st.title(title)
 
