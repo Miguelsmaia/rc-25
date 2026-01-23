@@ -153,4 +153,4 @@ if selection:
         st.header("Overall")
         st.dataframe(all_overall.drop(columns="stage")[all_overall["stage"] == rally_stage])
 else:
-    st.write("Insert codes")
+    st.write("Choose a rally to start")
