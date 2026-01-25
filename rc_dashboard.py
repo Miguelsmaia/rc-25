@@ -4,6 +4,15 @@ import requests
 import json
 import plotly.express as px
 
+st.html("""
+    <style>
+        .stMainBlockContainer {
+            max-width:800rem;
+        }
+    </style>
+    """
+)
+
 ##### GENERAL FUNCTIONS
 @st.cache_data
 def create_df(url):
