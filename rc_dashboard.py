@@ -7,7 +7,7 @@ import plotly.express as px
 st.html("""
     <style>
         .stMainBlockContainer {
-            max-width:800rem;
+            max-width:70rem;
         }
     </style>
     """
