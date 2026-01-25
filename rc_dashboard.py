@@ -15,6 +15,53 @@ def create_df(url):
         print("Error: ",e)
 
 
+                ##### INTRO INDO ##########
+
+## GET CHAMPIONSHIP ENTRIES (DRIVERS AND TEAMS)
+
+@st.cache_data
+def get_championship_entries():
+    url_entries = f"https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/championship-detail.json?championshipId=333&seasonId={47}"
+    championship_entries = requests.get(url_entries).json()
+    return championship_entries
+
+championship_entries = get_championship_entries()
+
+entries_dict = {entry["championshipEntryId"]: [f'{entry["fieldOne"]} {entry["fieldTwo"]}',
+                                               entry["fieldFour"]] for entry in championship_entries["championshipEntries"]}
+
+
+
+
+#### GET OVERALL RESULTS (FOR POINTS AND POSITIONS)
+
+# Function to get overall results dataframe
+@st.cache_data
+def get_champ_overall(entries_dict=entries_dict):
+    champ_overall_url = "https://p-p.redbull.com/rb-wrccom-lintegration-yv-prod/api/championship-overall-results.json?championshipId=333&seasonId=47"
+    champ_overall = requests.get(champ_overall_url).json()
+    # Creating dataframe with overall results
+    champ_overall_df = pd.DataFrame(champ_overall["entryResults"])
+    # Keeping only necessary columns
+    champ_overall_df = champ_overall_df[["championshipEntryId", "overallPosition", "overallPoints"]].copy()
+
+    # Adding driver names to the dataframe (based on the entries_dict created before)
+    champ_overall_df["driverName"] = champ_overall_df["championshipEntryId"].apply(lambda x : entries_dict[x][0])
+    champ_overall_df = champ_overall_df.sort_values("overallPosition")
+    return champ_overall_df
+
+# Get championship overall results dataframe 
+champ_overall_df = get_champ_overall()
+
+st.title("WRC DASHBOARD")
+st.subheader("2026 Season")
+
+col1, col2, col3 = st.columns(3)
+col1.metric("POS 1", champ_overall_df.iloc[0]["driverName"], champ_overall_df.iloc[0]["overallPoints"], delta_color="off", delta_arrow ="off")
+col2.metric("POS 2", champ_overall_df.iloc[1]["driverName"], champ_overall_df.iloc[1]["overallPoints"], delta_color="off", delta_arrow ="off")
+col3.metric("POS 3", champ_overall_df.iloc[2]["driverName"], champ_overall_df.iloc[2]["overallPoints"], delta_color="off", delta_arrow ="off")
+
+                    ##### DATA DASHBOARD ##############
 
 wrc_dict = {"Monte Carlo": [703, 635],
             "Sweden": [704, 636],
@@ -115,30 +162,80 @@ if selection:
         all_overall = pd.concat((all_overall, df_overall_clean))
 
 
-    ### GRÁFICOS
+
+    ## CARDS
+
+    # Getting last stage info
+    last_stage = all_overall["stage"].iloc[-1]
 
 
-    tab3, tab4 = st.tabs(["Overall chart", "Stage chart"])
+    # Creating cards for rally leader
+    # Getting rally leader info
+    rally_leader = all_overall[all_overall["stage"] == last_stage].sort_values("diffFirstOverall").iloc[0]
+    st.subheader("Rally Leader")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Driver", rally_leader["driver"])
+    col2.metric("Total Time", rally_leader["totalTime"])
+    col3.metric("Diff to 2nd", all_overall[all_overall["stage"] == last_stage].sort_values("diffFirstOverall").iloc[1]["diffFirstOverall"])
+
+
+    # Creating horizontal chart with stages winners
+    st.subheader("Stage Winners")
+    # Getting stage winners
+    stage_winners = all_stages.groupby(by="stage").first().reset_index()[["stage", "driver"]]
+    # Sorting stages in the correct order
+    stage_winners["stage_number"] = stage_winners["stage"].apply(lambda x: int(x.replace("SS", ""))).astype(int)
+    stage_winners = stage_winners.sort_values("stage_number")
+    # Creating pivot table to show stage winners in horizontal format
+    stage_winners_pivot = stage_winners.pivot_table(index=None, columns="stage_number", values="driver", aggfunc='first')
+    stage_winners_pivot.columns = [f'SS{col}' for col in stage_winners_pivot.columns]
+    st.dataframe(stage_winners_pivot) 
+
+
+
+    ## GRÁFICOS
+
+    st.subheader("Charts")
+
+    # Add slider to choose drivers count
+    n_drivers = st.slider("How many drivers on compact chart? ", 0, all_overall["driver"].nunique(), 4)
+
+
+    tab5, tab3, tab4 = st.tabs(["Compact overall chart", "Overall chart", "Stage chart"])
+
+   
+
 
     with tab3:
-        fig = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver", markers=True)
+        fig = px.line(all_overall, x="stage", y="diffFirstOverall", color="driver")
 
         st.plotly_chart(fig, theme="streamlit", use_container_width=True)
         
     with tab4:
-        fig2 = px.line(all_stages, x="stage", y="diffFirst", color="driver", markers=True)
+        fig2 = px.line(all_stages, x="stage", y="diffFirst", color="driver")
 
         st.plotly_chart(fig2, theme="streamlit", use_container_width=True)
+    
+    with tab5:
+        last_stage = all_overall[all_overall["stage"] == last_stage][["stage", "driver", "totalTime", "diffFirstOverall"]].sort_values("diffFirstOverall")
+        compact_overall = all_overall[all_overall["driver"].isin(last_stage["driver"].iloc[:n_drivers])][["stage", "driver", "totalTime", "diffFirstOverall"]]
+        fig3 = px.line(compact_overall, x="stage", y="diffFirstOverall", color="driver")
+
+        st.plotly_chart(fig3, theme="streamlit", use_container_width=True)
 
 
 
 
     ### TABELAS 
+    st.subheader("Tables")
+
+    # Getting index of last stage for selectbox default value
+    last_stage_index = len(all_overall["stage"].unique()) -1
 
     # Select box -> Selects between the available stages (from the stage dict created above on Stages section)
     rally_stage = st.selectbox(
         "Select Stage:",
-        (stage_dict.keys()),
+        (stage_dict.keys()), index=last_stage_index
     )
 
     # Creates a variable with the stage id of the selected stage
@@ -147,13 +244,12 @@ if selection:
 
     # Shows the table of the selected stage
 
-    tab1, tab2 = st.tabs(["Stage time", "Overall"])
+    tab2, tab1  = st.tabs(["Overall", "Stage time"])
 
     with tab1:
-        st.header("Stage time")
         st.dataframe(all_stages.drop(columns="stage")[all_stages["stage"] == rally_stage])
     with tab2:
-        st.header("Overall")
+        #st.header("Overall")
         st.dataframe(all_overall.drop(columns="stage")[all_overall["stage"] == rally_stage])
 else:
     st.write("Choose a rally to start")
