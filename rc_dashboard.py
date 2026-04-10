@@ -75,6 +75,12 @@ col3.metric("POS 3", champ_overall_df.iloc[2]["driverName"], champ_overall_df.il
 wrc_dict = {"Monte Carlo": [703, 635],
             "Sweden": [704, 636],
             "Kenya": [705, 637],
+            "Croatia": [706, 638],
+            "Islas Canarias": [707, 639],
+            "Portugal": [709, 640],
+            "Japan": [710, 641],
+            "Greece": [711, 642],
+            "Estonia": [712, 643]
             }
 
 #st.write("MC: 703, 635")
