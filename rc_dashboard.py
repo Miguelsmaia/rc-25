@@ -85,7 +85,7 @@ wrc_dict = {"Monte Carlo": [703, 635],
 
 #st.write("MC: 703, 635")
 
-options = ["Monte Carlo", "Sweden", "Kenya"]
+options = ["Monte Carlo", "Sweden", "Kenya","Croatia", "Islas Canarias", "Portugal", "Japan", "Greece", "Estonia"]
 selection = st.pills("Rallies", options, selection_mode="single")
 
 
