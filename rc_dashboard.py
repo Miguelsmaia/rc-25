@@ -77,10 +77,10 @@ wrc_dict = {"Monte Carlo": [703, 635],
             "Kenya": [705, 637],
             "Croatia": [706, 638],
             "Islas Canarias": [707, 639],
-            "Portugal": [709, 640],
-            "Japan": [710, 641],
-            "Greece": [711, 642],
-            "Estonia": [712, 643]
+            "Portugal": [708, 640],
+            "Japan": [709, 641],
+            "Greece": [710, 642],
+            "Estonia": [711, 643]
             }
 
 #st.write("MC: 703, 635")
