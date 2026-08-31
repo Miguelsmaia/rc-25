@@ -80,12 +80,19 @@ wrc_dict = {"Monte Carlo": [703, 635],
             "Portugal": [708, 640],
             "Japan": [709, 641],
             "Greece": [710, 642],
-            "Estonia": [711, 643]
+            "Estonia": [711, 643],
+            "Finland": [712, 644],
+            "Paraguay": [713, 645],
+            "Chile": [714, 646],
+            "Sardegna": [715, 647],
+            "Saudi Arabia": [716, 648],
             }
 
 #st.write("MC: 703, 635")
 
-options = ["Monte Carlo", "Sweden", "Kenya","Croatia", "Islas Canarias", "Portugal", "Japan", "Greece", "Estonia"]
+options = ["Monte Carlo", "Sweden", "Kenya","Croatia", "Islas Canarias", "Portugal", "Japan", "Greece", "Estonia",
+           "Finland", "Paraguay", "Chile", "Sardegna", "Saudi Arabia"]
+
 selection = st.pills("Rallies", options, selection_mode="single")
 
 
